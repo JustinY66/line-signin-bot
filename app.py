@@ -56,13 +56,13 @@ def reset_check_ins():
     print("Resetting check-in status...")
 
 # 每天固定时间执行重置任务
-schedule.every().day.at("00:00").do(reset_check_ins)
+    schedule.every().day.at("00:00").do(reset_check_ins)
 
 # 循环检查是否有任务需要执行
-while True:
-    schedule.run_pending()
-    time.sleep(1)
-
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+    
 @app.route("/callback", methods=['POST'])
 def callback():
     # 取得 Line 傳遞過來的訊息
