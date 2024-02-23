@@ -4,6 +4,8 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from flask import Flask, request, abort
 import requests
 import json
+import schedule
+import time
 
 # 設定 Line Bot 的 Channel Access Token 和 Channel Secret
 line_bot_api = LineBotApi('u8Ayn9wrrZpT1sCHH6WfAkbyEOmCL3G1mF/qc33/fcJt3lblNzzBPnY6cvc0y80zktfW3r8B6hSiS4jWLM+4JGfdHZDndVuwFlWiM2Hu4n5xUdT/tws0I9tbr4k71Tk3eY/AWBLc2c4k/quzUWUP+wdB04t89/1O/w1cDnyilFU=')
@@ -46,6 +48,20 @@ def send_discord_message(message):
         print('訊息已成功發送到 Discord!')
     else:
         print('發送訊息到 Discord 失敗！')
+
+# 重置簽到狀態的函数
+def reset_check_ins():
+    global check_ins
+    check_ins = {}
+    print("Resetting check-in status...")
+
+# 每天固定时间执行重置任务
+schedule.every().day.at("00:00").do(reset_check_ins)
+
+# 循环检查是否有任务需要执行
+while True:
+    schedule.run_pending()
+    time.sleep(1)
 
 @app.route("/callback", methods=['POST'])
 def callback():
